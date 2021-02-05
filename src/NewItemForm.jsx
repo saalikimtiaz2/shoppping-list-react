@@ -1,40 +1,35 @@
 import React, { useState } from "react";
+import { connect } from "react-redux";
 import { addItem } from "./redux/action/shopping";
 import { nanoid } from "nanoid";
 
-export default function NewItemForm() {
+function NewItemForm({ addItem }) {
   const [item, setItem] = useState("");
-  const [quantity, setQuantity] = useState("");
 
   const handleItemChange = (e) => {
     setItem(e.target.value);
   };
-  const handleQuantityChange = (e) => {
-    setQuantity(e.target.value);
-  };
 
-  const handleSubmit = () => {
+  const handleSubmit = (event) => {
+    event.preventDefault();
     const payload = {
       id: nanoid(),
-      itemName: item,
-      quantity: quantity,
+      name: item,
+      checked: false,
     };
     addItem(payload);
+    setItem("");
   };
 
   return (
     <div>
       <h2>Shopping List</h2>
-      <form onSubmit={handleSubmit}>
+      <form id="myForm" onSubmit={handleSubmit}>
         <label htmlFor="item">Item Name: </label>
         <input value={item} onChange={handleItemChange} placeholder="Name" />
-        <input
-          value={quantity}
-          onChange={handleQuantityChange}
-          placeholder="Quantity"
-        />
-        <button type="submit">Submit</button>
       </form>
     </div>
   );
 }
+
+export default connect(null, { addItem })(NewItemForm);
